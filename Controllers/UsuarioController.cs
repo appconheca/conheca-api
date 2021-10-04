@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ConhecaApi.Controllers
 {
-    [Authorize]    
+    //[Authorize]    
     //[Route("[controller]")]
     [ApiController]
     [Route("usuario")]
