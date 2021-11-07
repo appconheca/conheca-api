@@ -1,3 +1,4 @@
+using ConhecaApi.Models;
 using ConhecaApi.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -11,6 +12,7 @@ using Microsoft.OpenApi.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ConhecaApi
@@ -26,9 +28,18 @@ namespace ConhecaApi
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-            services.AddSingleton<IUsuarioRepository, UsuarioMemoryRepository>();
-            services.AddControllers();
+        {            
+            services.AddSingleton<IRepository<Categoria>, CategoriaRepository>();
+            services.AddSingleton<IRepository<Usuario>, UsuarioRepository>();
+            services.AddSingleton<IRepository<PontoTuristico>, PontoTuristicoRepository>();
+            
+
+
+            //services.AddControllers();
+            services.AddControllers().AddJsonOptions(x =>
+            {
+                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve;
+            });          
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ConhecaApi", Version = "v1" });
@@ -45,11 +56,14 @@ namespace ConhecaApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ConhecaApi"));
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            //app.UseAuthorization();
+
+            app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+
 
             app.UseEndpoints(endpoints =>
             {
